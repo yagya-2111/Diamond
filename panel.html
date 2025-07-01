@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Panel - Wealth Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+    --primary-color: #5d4fff;
+    --secondary-color: #1a1a2e;
+    --success-color: #00b894;
+    --danger-color: #ff7675;
+    --warning-color: #fdcb6e;
+    --info-color: #0984e3;
+    --light-color: #f8f9fa;
+    --dark-color: #2d3436;
+    --diamond-color: #b9f2ff;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Sidebar styling */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    background-color: var(--secondary-color) !important;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #adb5bd;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.sidebar .nav-link:hover {
+    color: var(--diamond-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .nav-link.active {
+    color: var(--diamond-color);
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left: 3px solid var(--diamond-color);
+}
+
+.sidebar .nav-link i {
+    margin-right: 4px;
+    color: var(--diamond-color);
+}
+
+.sidebar-header {
+    padding: 1rem 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.sidebar-header h3 {
+    color: var(--diamond-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(to right, var(--diamond-color), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+}
+
+.sidebar-header h3::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 2px;
+    background: var(--diamond-color);
+    margin: 10px auto 0;
+}
+
+/* Main content */
+main {
+    padding-top: 1.5rem;
+    background-color: #f8f9fa;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin-bottom: 20px;
+    background-color: #fff;
+    overflow: hidden;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-color), var(--diamond-color));
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+    background-color: #4a3fe0;
+    border-color: #4a3fe0;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    letter-spacing: 0.5px;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+/* Tables */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: var(--dark-color);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding-top: 0;
+    }
+    
+    main {
+        padding-top: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 15px;
+    }
+}
+
+/* Dashboard specific styles */
+.dashboard-card {
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-card::after {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(185, 242, 255, 0.1);
+    border-radius: 50%;
+}
+
+.dashboard-card .card-title {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dashboard-card .card-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.dashboard-card .card-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* Account cards */
+.account-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.account-card:hover {
+    transform: translateY(-5px);
+}
+
+.account-card .account-type {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.account-card .account-balance {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    color: var(--secondary-color);
+}
+
+.account-card .account-number {
+    font-family: monospace;
+    color: #6c757d;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+/* Investment cards */
+.investment-card {
+    position: relative;
+    transition: all 0.3s;
+}
+
+.investment-card:hover {
+    transform: translateY(-5px);
+}
+
+.investment-card .investment-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.investment-card .investment-return {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.investment-card .positive-return {
+    color: var(--success-color);
+}
+
+.investment-card .negative-return {
+    color: var(--danger-color);
+}
+
+/* Earnings chart container */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 1rem;
+}
+
+/* Form styling */
+.form-control, .form-select {
+    border-radius: 5px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    box-shadow: none;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(93, 79, 255, 0.25);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4a3fe0;
+}
+
+/* Diamond theme elements */
+.diamond-accent {
+    color: var(--diamond-color);
+}
+
+.diamond-bg {
+    background-color: var(--diamond-color);
+}
+
+.diamond-gradient {
+    background: linear-gradient(135deg, var(--primary-color), var(--diamond-color));
+}
+
+/* Main header */
+.main-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.main-header h1 {
+    color: var(--secondary-color);
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.main-header h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--diamond-color);
+}
+
+/* Progress bars */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+}
+
+/* Pagination */
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.pagination .page-link {
+    color: var(--primary-color);
+}
+
+/* Alert notifications */
+.alert {
+    border: none;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    border-left-color: var(--success-color);
+}
+
+.alert-danger {
+    border-left-color: var(--danger-color);
+}
+
+/* Tooltips */
+.tooltip-inner {
+    background-color: var(--secondary-color);
+}
+
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before, 
+.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: var(--secondary-color);
+}
+
+/* Modal header */
+.modal-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+}
+
+.modal-title {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+/* Investment type colors */
+.investment-stocks {
+    background-color: rgba(93, 79, 255, 0.1);
+    color: var(--primary-color);
+}
+
+.investment-gaming {
+    background-color: rgba(0, 184, 148, 0.1);
+    color: var(--success-color);
+}
+
+.investment-crypto {
+    background-color: rgba(253, 203, 110, 0.1);
+    color: #e17055;
+}
+
+.investment-real-estate {
+    background-color: rgba(9, 132, 227, 0.1);
+    color: var(--info-color);
+}
+
+.investment-bonds {
+    background-color: rgba(149, 165, 166, 0.1);
+    color: #636e72;
+}
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="sidebar-header">
+                        <h3>Diamond Panel</h3>
+                        <p class="text-muted small mb-0">Wealth Management</p>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard">
+                                <i class="fas fa-gem me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#accounts">
+                                <i class="fas fa-wallet me-2"></i>Accounts
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#investments">
+                                <i class="fas fa-chart-line me-2"></i>Investments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#transactions">
+                                <i class="fas fa-exchange-alt me-2"></i>Transactions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#earnings">
+                                <i class="fas fa-money-bill-wave me-2"></i>Earnings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#settings">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a>
+                        </li>
+                        <!-- Bonus Item -->
+<!-- <li class="nav-item">
+    <a class="nav-link" href="bonus.html">
+        <i class="fas fa-gift me-2"></i>Bonus
+    </a>
+</li>
+
+Add Account Item
+<li class="nav-item">
+    <a class="nav-link" href="account.html">
+        <i class="fas fa-user-plus me-2"></i>Add Account
+    </a>
+</li> -->
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom main-header">
+                    <h1 class="h2" id="pageTitle">Dashboard</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="exportPdfBtn">Export</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle">
+                            <i class="fas fa-user me-1"></i>
+                            <span id="username">User</span>
+                        </button>
+                         <!-- Add Account Button with link to add.html -->
+                    <a href="add.html" class="btn btn-sm btn-outline-success">
+                        <i class="fas fa-plus-circle me-1"></i>Add Account
+                    </a>
+                    </div>
+                </div>
+
+                <!-- Page Content -->
+                <div id="contentArea">
+                    <!-- Dashboard content will be loaded here dynamically -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Account Modal -->
+    <div class="modal fade" id="addAccountModal" tabindex="-1" aria-labelledby="addAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAccountModalLabel">Add New Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addAccountForm">
+                        <div class="mb-3">
+                            <label for="accountName" class="form-label">Account Name</label>
+                            <input type="text" class="form-control" id="accountName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="accountType" class="form-label">Account Type</label>
+                            <select class="form-select" id="accountType" required>
+                                <option value="">Select account type</option>
+                                <option value="current">Current Account</option>
+                                <option value="corporate">Corporate Account</option>
+                                <option value="savings">Savings Account</option>
+                                <option value="premium">Diamond Premium</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="initialBalance" class="form-label">Initial Balance ($)</label>
+                            <input type="number" class="form-control" id="initialBalance" min="0" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="investmentPreference" class="form-label">Investment Preference</label>
+                            <select class="form-select" id="investmentPreference" multiple>
+                                <option value="stocks">Stocks</option>
+                                <option value="gaming">Gaming Funds</option>
+                                <option value="crypto">Cryptocurrency</option>
+                                <option value="real-estate">Real Estate</option>
+                                <option value="bonds">Bonds</option>
+                                <option value="diamond">Diamond Assets</option>
+                            </select>
+                            <small class="text-muted">Hold Ctrl to select multiple options</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveAccountBtn">Save Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Funds Modal -->
+    <div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFundsModalLabel">Add Funds to Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addFundsForm">
+                        <div class="mb-3">
+                            <label for="fundsAccount" class="form-label">Select Account</label>
+                            <select class="form-select" id="fundsAccount" required>
+                                <!-- Accounts will be populated here -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fundsAmount" class="form-label">Amount ($)</label>
+                            <input type="number" class="form-control" id="fundsAmount" min="0" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fundsSource" class="form-label">Source</label>
+                            <select class="form-select" id="fundsSource" required>
+                                <option value="bank">Bank Transfer</option>
+                                <option value="card">Credit/Debit Card</option>
+                                <option value="crypto">Cryptocurrency</option>
+                                <option value="diamond">Diamond Exchange</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveFundsBtn">Add Funds</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invest Modal -->
+    <div class="modal fade" id="investModal" tabindex="-1" aria-labelledby="investModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="investModalLabel">Make Investment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="investForm">
+                        <div class="mb-3">
+                            <label for="investAccount" class="form-label">Select Account</label>
+                            <select class="form-select" id="investAccount" required>
+                                <!-- Accounts will be populated here -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="investmentType" class="form-label">Investment Type</label>
+                            <select class="form-select" id="investmentType" required>
+                                <option value="stocks">Stocks</option>
+                                <option value="gaming">Gaming Funds</option>
+                                <option value="crypto">Cryptocurrency</option>
+                                <option value="real-estate">Real Estate</option>
+                                <option value="bonds">Bonds</option>
+                                <option value="diamond">Diamond Assets</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="investmentAmount" class="form-label">Amount ($)</label>
+                            <input type="number" class="form-control" id="investmentAmount" min="0" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="investmentDuration" class="form-label">Duration (months)</label>
+                            <select class="form-select" id="investmentDuration" required>
+                                <option value="1">1 Month</option>
+                                <option value="3">3 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="12">1 Year</option>
+                                <option value="24">2 Years</option>
+                                <option value="60">5 Years</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveInvestBtn">Make Investment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the app
+            initApp();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Load the dashboard by default
+            loadPage('dashboard');
+        });
+
+        // App state
+        const state = {
+            user: {
+                name: "John Diamond",
+                email: "john.diamond@example.com",
+                lastLogin: new Date()
+            },
+            accounts: [
+                {
+                    id: 1,
+                    name: "Diamond Premium",
+                    type: "premium",
+                    balance: 22500.75,
+                    number: "****3456",
+                    investmentPreference: ["stocks", "diamond"],
+                    createdAt: new Date(2023, 0, 15)
+                },
+                {
+                    id: 2,
+                    name: "Business Account",
+                    type: "corporate",
+                    balance: 42500.20,
+                    number: "****7890",
+                    investmentPreference: ["real-estate", "diamond"],
+                    createdAt: new Date(2023, 2, 5)
+                },
+                {
+                    id: 3,
+                    name: "Savings Account",
+                    type: "savings",
+                    balance: 12500.50,
+                    number: "****2345",
+                    investmentPreference: ["bonds", "crypto"],
+                    createdAt: new Date(2023, 4, 10)
+                }
+            ],
+            transactions: [
+                {
+                    id: 1,
+                    accountId: 1,
+                    type: "deposit",
+                    amount: 5000,
+                    description: "Diamond asset sale",
+                    date: new Date(2023, 5, 1)
+                },
+                {
+                    id: 2,
+                    accountId: 1,
+                    type: "withdrawal",
+                    amount: 1250,
+                    description: "Luxury purchase",
+                    date: new Date(2023, 5, 3)
+                },
+                {
+                    id: 3,
+                    accountId: 2,
+                    type: "deposit",
+                    amount: 7500,
+                    description: "Client payment",
+                    date: new Date(2023, 5, 5)
+                },
+                {
+                    id: 4,
+                    accountId: 3,
+                    type: "deposit",
+                    amount: 3000,
+                    description: "Dividend payment",
+                    date: new Date(2023, 5, 8)
+                }
+            ],
+            investments: [
+                {
+                    id: 1,
+                    accountId: 1,
+                    type: "diamond",
+                    amount: 10000,
+                    currentValue: 11500,
+                    duration: 12,
+                    startDate: new Date(2023, 1, 15),
+                    expectedReturn: 15.0
+                },
+                {
+                    id: 2,
+                    accountId: 1,
+                    type: "stocks",
+                    amount: 5000,
+                    currentValue: 5420,
+                    duration: 6,
+                    startDate: new Date(2023, 3, 10),
+                    expectedReturn: 8.5
+                },
+                {
+                    id: 3,
+                    accountId: 2,
+                    type: "real-estate",
+                    amount: 20000,
+                    currentValue: 21250,
+                    duration: 24,
+                    startDate: new Date(2023, 0, 20),
+                    expectedReturn: 6.8
+                },
+                {
+                    id: 4,
+                    accountId: 3,
+                    type: "crypto",
+                    amount: 5000,
+                    currentValue: 4800,
+                    duration: 12,
+                    startDate: new Date(2023, 2, 15),
+                    expectedReturn: 12.5
+                }
+            ]
+        };
+
+        function initApp() {
+            // Set username in the header
+            document.getElementById('username').textContent = state.user.name;
+            
+            // Initialize any other app-wide functionality
+        }
+
+        function setupEventListeners() {
+            // Sidebar navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('href').substring(1);
+                    loadPage(page);
+                });
+            });
+            
+            // Add account modal
+            document.getElementById('saveAccountBtn').addEventListener('click', addNewAccount);
+            
+            // Add funds modal
+            document.getElementById('saveFundsBtn').addEventListener('click', addFundsToAccount);
+            
+            // Invest modal
+            document.getElementById('saveInvestBtn').addEventListener('click', makeInvestment);
+            
+            // Export PDF button
+            document.getElementById('exportPdfBtn').addEventListener('click', exportTransactionsToPDF);
+        }
+
+        function loadPage(page) {
+            // Update page title
+            const pageTitles = {
+                'dashboard': 'Dashboard',
+                'accounts': 'Accounts',
+                'investments': 'Investments',
+                'transactions': 'Transactions',
+                'earnings': 'Earnings',
+                'settings': 'Settings'
+            };
+            document.getElementById('pageTitle').textContent = pageTitles[page] || 'Dashboard';
+            
+            // Highlight active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${page}`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Load the appropriate content
+            const contentArea = document.getElementById('contentArea');
+            contentArea.innerHTML = '';
+            
+            switch(page) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'accounts':
+                    loadAccounts();
+                    break;
+                case 'investments':
+                    loadInvestments();
+                    break;
+                case 'transactions':
+                    loadTransactions();
+                    break;
+                case 'earnings':
+                    loadEarnings();
+                    break;
+                case 'settings':
+                    loadSettings();
+                    break;
+                default:
+                    loadDashboard();
+            }
+        }
+
+        function loadDashboard() {
+            const contentArea = document.getElementById('contentArea');
+            
+            // Calculate totals
+            const totalBalance = state.accounts.reduce((sum, account) => sum + account.balance, 0);
+            const totalInvested = state.investments.reduce((sum, investment) => sum + investment.amount, 0);
+            const totalEarnings = state.investments.reduce((sum, investment) => sum + (investment.currentValue - investment.amount), 0);
+            const recentTransactions = [...state.transactions].sort((a, b) => b.date - a.date).slice(0, 4);
+            
+            // Create dashboard HTML
+            contentArea.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-gem card-icon diamond-accent"></i>
+                                <h5 class="card-title">Total Balance</h5>
+                                <p class="card-value">$${totalBalance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-chart-line card-icon"></i>
+                                <h5 class="card-title">Total Invested</h5>
+                                <p class="card-value">$${totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-money-bill-wave card-icon"></i>
+                                <h5 class="card-title">Total Earnings</h5>
+                                <p class="card-value ${totalEarnings >= 0 ? 'text-success' : 'text-danger'}">
+                                    $${totalEarnings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Wealth Growth</span>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary">Week</button>
+                                    <button class="btn btn-sm btn-outline-secondary active">Month</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Year</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="earningsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Recent Transactions
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    ${recentTransactions.map(transaction => `
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">${transaction.description}</h6>
+                                                <small class="text-muted">${transaction.date.toLocaleDateString()}</small>
+                                            </div>
+                                            <span class="${transaction.type === 'deposit' ? 'text-success' : 'text-danger'}">
+                                                ${transaction.type === 'deposit' ? '+' : '-'}$${transaction.amount.toFixed(2)}
+                                            </span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                                <a href="#transactions" class="btn btn-sm btn-link mt-2">View all transactions</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Investment Portfolio
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="portfolioChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize charts
+            initEarningsChart();
+            initPortfolioChart();
+        }
+
+        function loadAccounts() {
+            const contentArea = document.getElementById('contentArea');
+            
+            contentArea.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Your Accounts</h3>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAccountModal">
+                        <i class="fas fa-plus me-1"></i> Add Account
+                    </button>
+                </div>
+                
+                <div class="row">
+                    ${state.accounts.map(account => {
+                        const accountTypeName = account.type === 'corporate' ? 'Corporate' : 
+                                            account.type === 'current' ? 'Current' : 
+                                            account.type === 'premium' ? 'Diamond Premium' : 'Savings';
+                        const accountTypeClass = account.type === 'premium' ? 'bg-primary' : 
+                                            account.type === 'corporate' ? 'bg-info' : 'bg-secondary';
+                        
+                        return `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card account-card">
+                                    <div class="card-body">
+                                        <span class="account-type badge ${accountTypeClass}">
+                                            ${accountTypeName}
+                                        </span>
+                                        <h5 class="card-title">${account.name}</h5>
+                                        <p class="account-balance">$${account.balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                                        <p class="account-number">${account.number}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="openAddFundsModal(${account.id})">
+                                                <i class="fas fa-plus me-1"></i> Add Funds
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success" onclick="openInvestModal(${account.id})">
+                                                <i class="fas fa-chart-line me-1"></i> Invest
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        Account Statistics
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="accountsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize accounts chart
+            initAccountsChart();
+        }
+
+        function loadInvestments() {
+            const contentArea = document.getElementById('contentArea');
+            
+            contentArea.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Your Investments</h3>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#investModal">
+                        <i class="fas fa-plus me-1"></i> New Investment
+                    </button>
+                </div>
+                
+                <div class="row">
+                    ${state.investments.map(investment => {
+                        const account = state.accounts.find(a => a.id === investment.accountId);
+                        const returnPercentage = ((investment.currentValue - investment.amount) / investment.amount * 100).toFixed(2);
+                        const isPositive = investment.currentValue >= investment.amount;
+                        const investmentClass = `investment-${investment.type}`;
+                        
+                        return `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card investment-card ${investmentClass}">
+                                    <div class="card-body">
+                                        <span class="investment-badge badge ${getInvestmentBadgeColor(investment.type)}">
+                                            ${getInvestmentTypeName(investment.type)}
+                                        </span>
+                                        <h5 class="card-title">${account ? account.name : 'Account'} Investment</h5>
+                                        <p class="card-text">
+                                            <small class="text-muted">Started ${investment.startDate.toLocaleDateString()}</small>
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Invested:</span>
+                                            <span>$${investment.amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Current Value:</span>
+                                            <span>$${investment.currentValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Return:</span>
+                                            <span class="investment-return ${isPositive ? 'positive-return' : 'negative-return'}">
+                                                ${isPositive ? '+' : ''}${returnPercentage}%
+                                            </span>
+                                        </div>
+                                        <div class="progress mt-3" style="height: 8px;">
+                                            <div class="progress-bar ${isPositive ? 'bg-success' : 'bg-danger'}" 
+                                                role="progressbar" 
+                                                style="width: ${Math.min(Math.abs(returnPercentage), 100)}%" 
+                                                aria-valuenow="${returnPercentage}" 
+                                                aria-valuemin="0" 
+                                                aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        Investment Performance
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="investmentsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize investments chart
+            initInvestmentsChart();
+        }
+
+        function loadTransactions() {
+            const contentArea = document.getElementById('contentArea');
+            
+            // Sort transactions by date (newest first)
+            const sortedTransactions = [...state.transactions].sort((a, b) => b.date - a.date);
+            
+            contentArea.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Transaction History</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-secondary active">All</button>
+                        <button class="btn btn-outline-secondary">Deposits</button>
+                        <button class="btn btn-outline-secondary">Withdrawals</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Account</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${sortedTransactions.map(transaction => {
+                                        const account = state.accounts.find(a => a.id === transaction.accountId);
+                                        return `
+                                            <tr>
+                                                <td>${transaction.date.toLocaleDateString()}</td>
+                                                <td>${transaction.description}</td>
+                                                <td>${account ? account.name : 'Unknown Account'}</td>
+                                                <td class="${transaction.type === 'deposit' ? 'text-success' : 'text-danger'}">
+                                                    ${transaction.type === 'deposit' ? '+' : '-'}$${transaction.amount.toFixed(2)}
+                                                </td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <nav aria-label="Transaction pagination" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            `;
+        }
+
+        function loadEarnings() {
+            const contentArea = document.getElementById('contentArea');
+            
+            // Calculate earnings by investment type
+            const earningsByType = {};
+            state.investments.forEach(investment => {
+                if (!earningsByType[investment.type]) {
+                    earningsByType[investment.type] = 0;
+                }
+                earningsByType[investment.type] += (investment.currentValue - investment.amount);
+            });
+            
+            contentArea.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>Earnings Overview</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-secondary active">All Time</button>
+                        <button class="btn btn-outline-secondary">This Year</button>
+                        <button class="btn btn-outline-secondary">This Month</button>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                Earnings Growth
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="earningsGrowthChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Earnings by Investment Type
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    ${Object.entries(earningsByType).map(([type, amount]) => `
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <i class="fas ${getInvestmentIcon(type)} me-2"></i>
+                                                ${getInvestmentTypeName(type)}
+                                            </span>
+                                            <span class="${amount >= 0 ? 'text-success' : 'text-danger'}">
+                                                $${amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                            </span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        Projected Earnings
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="projectedEarningsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize earnings charts
+            initEarningsGrowthChart();
+            initProjectedEarningsChart();
+        }
+
+        function loadSettings() {
+            const contentArea = document.getElementById('contentArea');
+            
+            contentArea.innerHTML = `
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Profile Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="profileName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="profileName" value="${state.user.name}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profileEmail" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="profileEmail" value="${state.user.email}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profilePhone" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="profilePhone" placeholder="Enter phone number">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Security Settings</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="currentPassword" class="form-label">Current Password</label>
+                                        <input type="password" class="form-control" id="currentPassword">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPassword" class="form-label">New Password</label>
+                                        <input type="password" class="form-control" id="newPassword">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="confirmPassword">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Change Password</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Notification Preferences</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                        <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="smsNotifications">
+                                        <label class="form-check-label" for="smsNotifications">SMS Notifications</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="investmentAlerts" checked>
+                                        <label class="form-check-label" for="investmentAlerts">Investment Alerts</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Preferences</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal functions
+        function openAddFundsModal(accountId) {
+            const modal = new bootstrap.Modal(document.getElementById('addFundsModal'));
+            const accountSelect = document.getElementById('fundsAccount');
+            
+            // Populate account select
+            accountSelect.innerHTML = state.accounts.map(account => `
+                <option value="${account.id}" ${account.id === accountId ? 'selected' : ''}>
+                    ${account.name} (${account.type === 'corporate' ? 'Corporate' : account.type === 'current' ? 'Current' : account.type === 'premium' ? 'Diamond Premium' : 'Savings'})
+                </option>
+            `).join('');
+            
+            modal.show();
+        }
+
+        function openInvestModal(accountId) {
+            const modal = new bootstrap.Modal(document.getElementById('investModal'));
+            const accountSelect = document.getElementById('investAccount');
+            
+            // Populate account select
+            accountSelect.innerHTML = state.accounts.map(account => `
+                <option value="${account.id}" ${account.id === accountId ? 'selected' : ''}>
+                    ${account.name} ($${account.balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})})
+                </option>
+            `).join('');
+            
+            modal.show();
+        }
+
+        function addNewAccount() {
+            const name = document.getElementById('accountName').value;
+            const type = document.getElementById('accountType').value;
+            const balance = parseFloat(document.getElementById('initialBalance').value);
+            const investmentPreference = Array.from(document.getElementById('investmentPreference').selectedOptions)
+                .map(option => option.value);
+            
+            if (!name || !type || isNaN(balance)) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Generate a random account number for demo purposes
+            const accountNumber = `****${Math.floor(1000 + Math.random() * 9000)}`;
+            
+            // Create new account
+            const newAccount = {
+                id: state.accounts.length + 1,
+                name,
+                type,
+                balance,
+                number: accountNumber,
+                investmentPreference,
+                createdAt: new Date()
+            };
+            
+            // Add to state
+            state.accounts.push(newAccount);
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addAccountModal'));
+            modal.hide();
+            
+            // Reset form
+            document.getElementById('addAccountForm').reset();
+            
+            // Reload accounts page
+            loadPage('accounts');
+            
+            // Show success message
+            showAlert('Account created successfully!', 'success');
+        }
+
+        function addFundsToAccount() {
+            const accountId = parseInt(document.getElementById('fundsAccount').value);
+            const amount = parseFloat(document.getElementById('fundsAmount').value);
+            const source = document.getElementById('fundsSource').value;
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            // Find account
+            const account = state.accounts.find(a => a.id === accountId);
+            if (!account) {
+                alert('Account not found');
+                return;
+            }
+            
+            // Update balance
+            account.balance += amount;
+            
+            // Add transaction
+            const newTransaction = {
+                id: state.transactions.length + 1,
+                accountId,
+                type: 'deposit',
+                amount,
+                description: `Funds added via ${source === 'bank' ? 'bank transfer' : source === 'card' ? 'card payment' : source === 'diamond' ? 'Diamond Exchange' : source}`,
+                date: new Date()
+            };
+            state.transactions.push(newTransaction);
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addFundsModal'));
+            modal.hide();
+            
+            // Reset form
+            document.getElementById('addFundsForm').reset();
+            
+            // Reload current page
+            const currentPage = document.querySelector('.nav-link.active').getAttribute('href').substring(1);
+            loadPage(currentPage);
+            
+            // Show success message
+            showAlert(`$${amount.toFixed(2)} added to account successfully!`, 'success');
+        }
+
+        function makeInvestment() {
+            const accountId = parseInt(document.getElementById('investAccount').value);
+            const type = document.getElementById('investmentType').value;
+            const amount = parseFloat(document.getElementById('investmentAmount').value);
+            const duration = parseInt(document.getElementById('investmentDuration').value);
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            // Find account
+            const account = state.accounts.find(a => a.id === accountId);
+            if (!account) {
+                alert('Account not found');
+                return;
+            }
+            
+            // Check if account has sufficient balance
+            if (account.balance < amount) {
+                alert('Insufficient funds in account');
+                return;
+            }
+            
+            // Deduct from account balance
+            account.balance -= amount;
+            
+            // Calculate expected return (random for demo)
+            let expectedReturn;
+            if (type === 'diamond') {
+                expectedReturn = (Math.random() * 10 + 10).toFixed(1); // 10-20% for diamond
+            } else {
+                expectedReturn = (Math.random() * 15 + 5).toFixed(1); // 5-20% for others
+            }
+            
+            // Create investment
+            const newInvestment = {
+                id: state.investments.length + 1,
+                accountId,
+                type,
+                amount,
+                currentValue: amount, // Will grow over time
+                duration,
+                startDate: new Date(),
+                expectedReturn
+            };
+            state.investments.push(newInvestment);
+            
+            // Add transaction
+            const newTransaction = {
+                id: state.transactions.length + 1,
+                accountId,
+                type: 'withdrawal',
+                amount,
+                description: `Investment in ${getInvestmentTypeName(type)}`,
+                date: new Date()
+            };
+            state.transactions.push(newTransaction);
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('investModal'));
+            modal.hide();
+            
+            // Reset form
+            document.getElementById('investForm').reset();
+            
+            // Reload investments page
+            loadPage('investments');
+            
+            // Show success message
+            showAlert(`Investment of $${amount.toFixed(2)} created successfully!`, 'success');
+        }
+
+        // Export transactions to PDF
+        function exportTransactionsToPDF() {
+            // Create a new jsPDF instance
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.setTextColor(40);
+            doc.text('Diamond Panel - Transaction History', 105, 15, { align: 'center' });
+            
+            // Add user info
+            doc.setFontSize(12);
+            doc.text(`User: ${state.user.name}`, 14, 25);
+            doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+            
+            // Add line separator
+            doc.setDrawColor(93, 79, 255);
+            doc.setLineWidth(0.5);
+            doc.line(14, 35, 196, 35);
+            
+            // Prepare transaction data for the table
+            const sortedTransactions = [...state.transactions].sort((a, b) => b.date - a.date);
+            const tableData = sortedTransactions.map(transaction => {
+                const account = state.accounts.find(a => a.id === transaction.accountId);
+                return [
+                    transaction.date.toLocaleDateString(),
+                    transaction.description,
+                    account ? account.name : 'Unknown',
+                    `${transaction.type === 'deposit' ? '+' : '-'}$${transaction.amount.toFixed(2)}`,
+                    'Completed'
+                ];
+            });
+            
+            // Add table headers
+            const headers = [
+                { title: "Date", dataKey: "date" },
+                { title: "Description", dataKey: "description" },
+                { title: "Account", dataKey: "account" },
+                { title: "Amount", dataKey: "amount" },
+                { title: "Status", dataKey: "status" }
+            ];
+            
+            // Create the table
+            doc.autoTable({
+                startY: 40,
+                head: [headers.map(h => h.title)],
+                body: tableData,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [93, 79, 255],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                columnStyles: {
+                    0: { cellWidth: 25 },
+                    1: { cellWidth: 60 },
+                    2: { cellWidth: 40 },
+                    3: { cellWidth: 30 },
+                    4: { cellWidth: 25 }
+                },
+                didDrawCell: (data) => {
+                    // Color code amounts (green for deposits, red for withdrawals)
+                    if (data.column.index === 3) {
+                        const value = data.cell.raw;
+                        if (value.startsWith('+')) {
+                            doc.setTextColor(0, 184, 148); // Green for deposits
+                        } else {
+                            doc.setTextColor(255, 118, 117); // Red for withdrawals
+                        }
+                    }
+                }
+            });
+            
+            // Add summary
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFontSize(12);
+            doc.setTextColor(40);
+            doc.text('Transaction Summary:', 14, finalY);
+            
+            const totalDeposits = state.transactions
+                .filter(t => t.type === 'deposit')
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            const totalWithdrawals = state.transactions
+                .filter(t => t.type === 'withdrawal')
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            doc.text(`Total Deposits: $${totalDeposits.toFixed(2)}`, 14, finalY + 10);
+            doc.text(`Total Withdrawals: $${totalWithdrawals.toFixed(2)}`, 14, finalY + 20);
+            doc.text(`Net Change: $${(totalDeposits - totalWithdrawals).toFixed(2)}`, 14, finalY + 30);
+            
+            // Add footer
+            doc.setFontSize(10);
+            doc.setTextColor(150);
+            doc.text('© Diamond Panel - Wealth Management System', 105, 285, { align: 'center' });
+            
+            // Save the PDF
+            doc.save(`DiamondPanel_Transactions_${new Date().toISOString().slice(0,10)}.pdf`);
+            
+            // Show success message
+            showAlert('Transaction history exported to PDF successfully!', 'success');
+        }
+
+        // Helper functions
+        function getInvestmentTypeName(type) {
+            const names = {
+                'stocks': 'Stocks',
+                'gaming': 'Gaming Funds',
+                'crypto': 'Cryptocurrency',
+                'real-estate': 'Real Estate',
+                'bonds': 'Bonds',
+                'diamond': 'Diamond Assets'
+            };
+            return names[type] || type;
+        }
+
+        function getInvestmentBadgeColor(type) {
+            const colors = {
+                'stocks': 'primary',
+                'gaming': 'success',
+                'crypto': 'warning',
+                'real-estate': 'info',
+                'bonds': 'secondary',
+                'diamond': 'dark'
+            };
+            return colors[type] || 'dark';
+        }
+
+        function getInvestmentIcon(type) {
+            const icons = {
+                'stocks': 'fa-chart-line',
+                'gaming': 'fa-gamepad',
+                'crypto': 'fa-coins',
+                'real-estate': 'fa-home',
+                'bonds': 'fa-file-invoice-dollar',
+                'diamond': 'fa-gem'
+            };
+            return icons[type] || 'fa-piggy-bank';
+        }
+
+        function showAlert(message, type = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show fixed-top mx-auto mt-3`;
+            alert.style.maxWidth = '500px';
+            alert.style.zIndex = '9999';
+            alert.role = 'alert';
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            document.body.appendChild(alert);
+            
+            // Auto dismiss after 3 seconds
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 3000);
+        }
+
+        // Chart functions
+        function initEarningsChart() {
+            const ctx = document.getElementById('earningsChart').getContext('2d');
+            
+            // Sample data for the chart
+            const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const earningsData = [1500, 2200, 1800, 2500, 2800, 3500];
+            const investmentData = [8000, 10000, 12000, 15000, 18000, 22000];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Earnings',
+                            data: earningsData,
+                            borderColor: '#00b894',
+                            backgroundColor: 'rgba(0, 184, 148, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Investments',
+                            data: investmentData,
+                            borderColor: '#5d4fff',
+                            backgroundColor: 'rgba(93, 79, 255, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initPortfolioChart() {
+            const ctx = document.getElementById('portfolioChart').getContext('2d');
+            
+            // Group investments by type
+            const investmentTypes = {};
+            state.investments.forEach(investment => {
+                if (!investmentTypes[investment.type]) {
+                    investmentTypes[investment.type] = 0;
+                }
+                investmentTypes[investment.type] += investment.currentValue;
+            });
+            
+            const labels = Object.keys(investmentTypes).map(getInvestmentTypeName);
+            const data = Object.values(investmentTypes);
+            const backgroundColors = Object.keys(investmentTypes).map(type => {
+                const colors = {
+                    'stocks': '#5d4fff',
+                    'gaming': '#00b894',
+                    'crypto': '#fdcb6e',
+                    'real-estate': '#0984e3',
+                    'bonds': '#636e72',
+                    'diamond': '#b9f2ff'
+                };
+                return colors[type] || '#dfe6e9';
+            });
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initAccountsChart() {
+            const ctx = document.getElementById('accountsChart').getContext('2d');
+            
+            // Group accounts by type
+            const accountTypes = {};
+            state.accounts.forEach(account => {
+                if (!accountTypes[account.type]) {
+                    accountTypes[account.type] = 0;
+                }
+                accountTypes[account.type] += account.balance;
+            });
+            
+            const labels = Object.keys(accountTypes).map(type => 
+                type === 'corporate' ? 'Corporate' : 
+                type === 'current' ? 'Current' : 
+                type === 'premium' ? 'Diamond Premium' : 'Savings'
+            );
+            const data = Object.values(accountTypes);
+            const backgroundColors = [
+                '#5d4fff',
+                '#0984e3',
+                '#b9f2ff',
+                '#00b894'
+            ];
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+                function loadDashboard() {
+            const contentArea = document.getElementById('contentArea');
+            
+            // Calculate totals
+            const totalBalance = state.accounts.reduce((sum, account) => sum + account.balance, 0);
+            const totalInvested = state.investments.reduce((sum, investment) => sum + investment.amount, 0);
+            const totalEarnings = state.investments.reduce((sum, investment) => sum + (investment.currentValue - investment.amount), 0);
+            const recentTransactions = [...state.transactions].sort((a, b) => b.date - a.date).slice(0, 4);
+            
+            // Create dashboard HTML
+            contentArea.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-gem card-icon diamond-accent"></i>
+                                <h5 class="card-title">Total Balance</h5>
+                                <p class="card-value">$${totalBalance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-chart-line card-icon"></i>
+                                <h5 class="card-title">Total Invested</h5>
+                                <p class="card-value">$${totalInvested.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-money-bill-wave card-icon"></i>
+                                <h5 class="card-title">Total Earnings</h5>
+                                <p class="card-value ${totalEarnings >= 0 ? 'text-success' : 'text-danger'}">
+                                    $${totalEarnings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>Wealth Growth</span>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary">Week</button>
+                                    <button class="btn btn-sm btn-outline-secondary active">Month</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Year</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="earningsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                Recent Transactions
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    ${recentTransactions.map(transaction => `
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">${transaction.description}</h6>
+                                                <small class="text-muted">${transaction.date.toLocaleDateString()}</small>
+                                            </div>
+                                            <span class="${transaction.type === 'deposit' ? 'text-success' : 'text-danger'}">
+                                                ${transaction.type === 'deposit' ? '+' : '-'}$${transaction.amount.toFixed(2)}
+                                            </span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                                <a href="#transactions" class="btn btn-sm btn-link mt-2 view-transactions">View all transactions</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Investment Portfolio
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="portfolioChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize charts
+            initEarningsChart();
+            initPortfolioChart();
+            
+            // Add event listener to the "View all transactions" link
+            document.querySelector('.view-transactions').addEventListener('click', function(e) {
+                e.preventDefault();
+                loadPage('transactions');
+            });
+        }
+
+
+
+        function initInvestmentsChart() {
+            const ctx = document.getElementById('investmentsChart').getContext('2d');
+            
+            // Group investments by type
+            const investmentTypes = {};
+            state.investments.forEach(investment => {
+                if (!investmentTypes[investment.type]) {
+                    investmentTypes[investment.type] = 0;
+                }
+                investmentTypes[investment.type] += investment.amount;
+            });
+            
+            const labels = Object.keys(investmentTypes).map(getInvestmentTypeName);
+            const data = Object.values(investmentTypes);
+            const backgroundColors = Object.keys(investmentTypes).map(type => {
+                const colors = {
+                    'stocks': 'rgba(93, 79, 255, 0.7)',
+                    'gaming': 'rgba(0, 184, 148, 0.7)',
+                    'crypto': 'rgba(253, 203, 110, 0.7)',
+                    'real-estate': 'rgba(9, 132, 227, 0.7)',
+                    'bonds': 'rgba(149, 165, 166, 0.7)',
+                    'diamond': 'rgba(185, 242, 255, 0.7)'
+                };
+                return colors[type] || 'rgba(189, 195, 199, 0.7)';
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Amount Invested',
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initEarningsGrowthChart() {
+            const ctx = document.getElementById('earningsGrowthChart').getContext('2d');
+            
+            // Sample data for the chart
+            const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const earningsData = [1500, 2200, 1800, 2500, 2800, 3500];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Earnings Growth',
+                        data: earningsData,
+                        borderColor: '#00b894',
+                        backgroundColor: 'rgba(0, 184, 148, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initProjectedEarningsChart() {
+            const ctx = document.getElementById('projectedEarningsChart').getContext('2d');
+            
+            // Calculate projected earnings based on current investments
+            const projections = [];
+            let currentValue = 0;
+            
+            // Start with current total earnings
+            const currentEarnings = state.investments.reduce((sum, investment) => 
+                sum + (investment.currentValue - investment.amount), 0);
+            currentValue = currentEarnings;
+            
+            // Project for next 12 months
+            for (let i = 0; i < 12; i++) {
+                // Add some random growth for demo purposes
+                const growth = currentValue * (0.05 + Math.random() * 0.1);
+                currentValue += growth;
+                projections.push(currentValue);
+            }
+            
+            const labels = ['Current'].concat(
+                Array.from({length: 12}, (_, i) => `Month ${i+1}`)
+            );
+            const data = [currentEarnings].concat(projections);
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Projected Earnings',
+                        data: data,
+                        borderColor: '#b9f2ff',
+                        backgroundColor: 'rgba(185, 242, 255, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Projected: $' + Math.round(context.raw).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Simulate investment growth over time
+        function simulateInvestmentGrowth() {
+            state.investments.forEach(investment => {
+                // Calculate days since investment started
+                const daysPassed = (new Date() - investment.startDate) / (1000 * 60 * 60 * 24);
+                
+                // Only update if at least one day has passed
+                if (daysPassed >= 1) {
+                    // Calculate expected daily return
+                    let dailyReturn;
+                    if (investment.type === 'diamond') {
+                        // Diamond investments have higher potential returns
+                        dailyReturn = Math.pow(1 + investment.expectedReturn / 100, 1/365) - 1;
+                    } else {
+                        dailyReturn = Math.pow(1 + investment.expectedReturn / 100, 1/365) - 1;
+                    }
+                    
+                    // Apply some random variation
+                    const variation = 1 + (Math.random() * 0.02 - 0.01); // ±1% variation
+                    
+                    // Update current value
+                    investment.currentValue = investment.amount * Math.pow(1 + dailyReturn * variation, daysPassed);
+                    
+                    // Ensure we don't go below 80% of initial investment
+                    investment.currentValue = Math.max(investment.currentValue, investment.amount * 0.8);
+                }
+            });
+        }
+
+        // Run simulation every minute
+        setInterval(simulateInvestmentGrowth, 60000);
+
+        // Initial simulation
+        simulateInvestmentGrowth();
+
+        document.addEventListener('DOMContentLoaded', function() {
+    // Define all functions first
+    function initApp() {
+        document.getElementById('username').textContent = state.user.name;
+    }
+    
+    function setupEventListeners() {
+        // Sidebar navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.getAttribute('href').substring(1);
+                loadPage(page);
+            });
+        });
+        
+        // ... other event listeners ...
+    }
+    
+    function loadPage(page) {
+        // Update page title
+        const pageTitles = {
+            'dashboard': 'Dashboard',
+            'accounts': 'Accounts',
+            'investments': 'Investments',
+            'transactions': 'Transactions',
+            'earnings': 'Earnings',
+            'settings': 'Settings'
+        };
+        document.getElementById('pageTitle').textContent = pageTitles[page] || 'Dashboard';
+        
+        // Highlight active nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${page}`) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Load the appropriate content
+        const contentArea = document.getElementById('contentArea');
+        contentArea.innerHTML = '';
+        
+        switch(page) {
+            case 'dashboard':
+                loadDashboard();
+                break;
+            case 'accounts':
+                loadAccounts();
+                break;
+            case 'investments':
+                loadInvestments();
+                break;
+            case 'transactions':
+                loadTransactions();
+                break;
+            case 'earnings':
+                loadEarnings();
+                break;
+            case 'settings':
+                loadSettings();
+                break;
+            default:
+                loadDashboard();
+        }
+    }
+    
+    // ... define all other functions (loadDashboard, loadAccounts, etc.) ...
+
+    // Now initialize the app
+    initApp();
+    setupEventListeners();
+    loadPage('dashboard');
+});
+    </script>
+</body>
+</html>
