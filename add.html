@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Bank Account / 添加银行账户</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 22px;
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .language-toggle {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        
+        .language-btn {
+            background: none;
+            border: none;
+            color: #3498db;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .chinese-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 5px;
+        }
+        
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+        }
+        
+        .radio-option input, .checkbox-option input {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .file-upload {
+            margin-top: 5px;
+        }
+        
+        .file-upload-label {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .file-upload-label:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .fund-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .fund-option {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .fund-option.selected {
+            border-color: #3498db;
+            background-color: #f0f8ff;
+        }
+        
+        .fund-option input {
+            display: none;
+        }
+        
+        @media (max-width: 500px) {
+            .fund-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 420px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .radio-group, .checkbox-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+        
+        @media (max-width: 375px) {
+            .container {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 18px;
+            }
+            
+            select, input, textarea {
+                padding: 8px;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 17px;
+            }
+            
+            label {
+                font-size: 13px;
+            }
+            
+            select, input, textarea {
+                font-size: 13px;
+                padding: 7px;
+            }
+            
+            .chinese-label {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-toggle">
+            <button class="language-btn" id="toggleLanguage">中文</button>
+        </div>
+        
+        <h1 id="formTitle">Add Bank Account</h1>
+        
+        <form id="bankAccountForm">
+            <div class="section">
+                <div class="section-title" id="bankInfoTitle">Bank Information</div>
+                
+                <div class="form-group">
+                    <label for="bankName" id="bankNameLabel">Bank name <span class="chinese-label">银行名称</span></label>
+                    <select id="bankName" required>
+                        <option value="">Select Bank / 选择银行</option>
+                        <option value="SBI">State Bank of India / 印度国家银行</option>
+                        <option value="HDFC">HDFC Bank / 印度HDFC银行</option>
+                        <option value="ICICI">ICICI Bank / 印度ICICI银行</option>
+                        <option value="Axis">Axis Bank / 印度Axis银行</option>
+                        <option value="Other">Other Bank / 其他银行</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label id="accountTypeLabel">Account Type <span class="chinese-label">账户类型</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="currentAccount" name="accountType" value="current" checked>
+                            <label for="currentAccount">Current / 活期</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="savingAccount" name="accountType" value="saving">
+                            <label for="savingAccount">Saving / 储蓄</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="accountNumber" id="accountNumberLabel">Account No. <span class="chinese-label">账号</span></label>
+                    <input type="text" id="accountNumber" placeholder="Enter account number / 输入账号" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ifsc" id="ifscLabel">IFSC Code <span class="chinese-label">IFSC代码</span></label>
+                    <input type="text" id="ifsc" placeholder="Enter IFSC code / 输入IFSC代码" required>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" id="personalInfoTitle">Personal Information</div>
+                
+                <div class="form-group">
+                    <label for="mobileNumber" id="mobileNumberLabel">Mobile No. <span class="chinese-label">手机号码</span></label>
+                    <input type="tel" id="mobileNumber" placeholder="Enter mobile number / 输入手机号码" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName" id="fullNameLabel">Name <span class="chinese-label">姓名</span></label>
+                    <input type="text" id="fullName" placeholder="Enter name as in bank records / 输入银行记录中的姓名" required>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" id="upiTitle">UPI & Online Banking</div>
+                
+                <div class="form-group">
+                    <label for="bankUpi" id="bankUpiLabel">Bank UPI ID <span class="chinese-label">银行UPI ID</span></label>
+                    <input type="text" id="bankUpi" placeholder="Enter UPI ID / 输入UPI ID">
+                </div>
+                
+                <div class="form-group">
+                    <label for="username" id="usernameLabel">Username/ID <span class="chinese-label">用户名/ID</span></label>
+                    <input type="text" id="username" placeholder="Enter online banking username / 输入网上银行用户名">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" id="passwordLabel">Password <span class="chinese-label">密码</span></label>
+                    <input type="password" id="password" placeholder="Enter online banking password / 输入网上银行密码">
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" id="documentsTitle">Document Upload</div>
+                
+                <div class="form-group">
+                    <label id="atmCardLabel">ATM Card <span class="chinese-label">ATM卡</span></label>
+                    <input type="file" id="atmCard" class="file-upload" accept="image/*,.pdf">
+                    <small>Upload front and back images / 上传正反面图片</small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="panCardLabel">PAN Card <span class="chinese-label">PAN卡</span></label>
+                    <input type="file" id="panCard" class="file-upload" accept="image/*,.pdf">
+                </div>
+                
+                <div class="form-group">
+                    <label id="aadhaarCardLabel">Aadhaar Card <span class="chinese-label">Aadhaar卡</span></label>
+                    <input type="file" id="aadhaarCard" class="file-upload" accept="image/*,.pdf">
+                    <small>Upload front and back images / 上传正反面图片</small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="qrCodeLabel">QR Code <span class="chinese-label">二维码</span></label>
+                    <input type="file" id="qrCode" class="file-upload" accept="image/*">
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title" id="fundOptionsTitle">Fund Options</div>
+                
+                <div class="form-group">
+                    <label id="fundTypeLabel">Select Fund Type <span class="chinese-label">选择资金类型</span></label>
+                    <div class="fund-options">
+                        <label class="fund-option" id="gamingFundOption">
+                            <input type="radio" name="fundType" value="gaming">
+                            <div>
+                                <strong>Gaming Fund / 游戏资金</strong>
+                                <p>For gaming transactions only / 仅用于游戏交易</p>
+                            </div>
+                        </label>
+                        
+                        <label class="fund-option" id="stockFundOption">
+                            <input type="radio" name="fundType" value="stock">
+                            <div>
+                                <strong>Stock Fund / 股票资金</strong>
+                                <p>For stock investments only / 仅用于股票投资</p>
+                            </div>
+                        </label>
+                        
+                        <label class="fund-option" id="mixedFundOption">
+                            <input type="radio" name="fundType" value="mixed" checked>
+                            <div>
+                                <strong>Mixed Fund / 混合资金</strong>
+                                <p>For both gaming and stocks / 用于游戏和股票</p>
+                            </div>
+                        </label>
+                        
+                        <label class="fund-option" id="cuttingOption">
+                            <input type="radio" name="fundType" value="cutting">
+                            <div>
+                                <strong>Cutting / 切割</strong>
+                                <p>Separate funds management / 单独资金管理</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="autoTransfer" name="additionalOptions">
+                        <label for="autoTransfer" id="autoTransferLabel">Enable Auto Transfer <span class="chinese-label">启用自动转账</span></label>
+                    </div>
+                    
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="instantWithdrawal" name="additionalOptions">
+                        <label for="instantWithdrawal" id="instantWithdrawalLabel">Instant Withdrawal <span class="chinese-label">即时提款</span></label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn">Add Account / 添加账户</button>
+        </form>
+    </div>
+    
+    <script>
+        // Language toggle functionality
+        const languageBtn = document.getElementById('toggleLanguage');
+        let currentLanguage = 'en';
+        
+        const translations = {
+            en: {
+                formTitle: "Add Bank Account",
+                bankInfoTitle: "Bank Information",
+                bankNameLabel: "Bank name",
+                accountTypeLabel: "Account Type",
+                accountNumberLabel: "Account No.",
+                ifscLabel: "IFSC Code",
+                personalInfoTitle: "Personal Information",
+                mobileNumberLabel: "Mobile No.",
+                fullNameLabel: "Name",
+                upiTitle: "UPI & Online Banking",
+                bankUpiLabel: "Bank UPI ID",
+                usernameLabel: "Username/ID",
+                passwordLabel: "Password",
+                documentsTitle: "Document Upload",
+                atmCardLabel: "ATM Card",
+                panCardLabel: "PAN Card",
+                aadhaarCardLabel: "Aadhaar Card",
+                qrCodeLabel: "QR Code",
+                fundOptionsTitle: "Fund Options",
+                fundTypeLabel: "Select Fund Type",
+                autoTransferLabel: "Enable Auto Transfer",
+                instantWithdrawalLabel: "Instant Withdrawal",
+                submitBtn: "Add Account"
+            },
+            zh: {
+                formTitle: "添加银行账户",
+                bankInfoTitle: "银行信息",
+                bankNameLabel: "银行名称",
+                accountTypeLabel: "账户类型",
+                accountNumberLabel: "账号",
+                ifscLabel: "IFSC代码",
+                personalInfoTitle: "个人信息",
+                mobileNumberLabel: "手机号码",
+                fullNameLabel: "姓名",
+                upiTitle: "UPI与网上银行",
+                bankUpiLabel: "银行UPI ID",
+                usernameLabel: "用户名/ID",
+                passwordLabel: "密码",
+                documentsTitle: "文件上传",
+                atmCardLabel: "ATM卡",
+                panCardLabel: "PAN卡",
+                aadhaarCardLabel: "Aadhaar卡",
+                qrCodeLabel: "二维码",
+                fundOptionsTitle: "资金选项",
+                fundTypeLabel: "选择资金类型",
+                autoTransferLabel: "启用自动转账",
+                instantWithdrawalLabel: "即时提款",
+                submitBtn: "添加账户"
+            }
+        };
+        
+        languageBtn.addEventListener('click', function() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            languageBtn.textContent = currentLanguage === 'en' ? '中文' : 'English';
+            updateLanguage(currentLanguage);
+        });
+        
+        function updateLanguage(lang) {
+            for (const [key, value] of Object.entries(translations[lang])) {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = value;
+                }
+            }
+        }
+        
+        // Fund option selection styling
+        const fundOptions = document.querySelectorAll('.fund-option');
+        fundOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                fundOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Form submission
+        document.getElementById('bankAccountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fundType = document.querySelector('input[name="fundType"]:checked').value;
+            alert(`Account details submitted successfully!\nFund Type: ${fundType}`);
+        });
+
+           document.getElementById('bankAccountForm').addEventListener('submit', function(e) {
+            // Collect all form data
+            const formData = {
+                bankName: document.getElementById('bankName').value,
+                accountType: document.querySelector('input[name="accountType"]:checked').value,
+                accountNumber: document.getElementById('accountNumber').value,
+                ifsc: document.getElementById('ifsc').value,
+                mobileNumber: document.getElementById('mobileNumber').value,
+                fullName: document.getElementById('fullName').value,
+                bankUpi: document.getElementById('bankUpi').value,
+                username: document.getElementById('username').value,
+                fundType: document.querySelector('input[name="fundType"]:checked').value,
+                autoTransfer: document.getElementById('autoTransfer').checked,
+                instantWithdrawal: document.getElementById('instantWithdrawal').checked
+            };
+
+            // Store in localStorage temporarily
+            localStorage.setItem('bankAccountData', JSON.stringify(formData));
+            
+            // Alternatively, you could pass data via URL parameters
+            // window.location.href = `database.html?data=${encodeURIComponent(JSON.stringify(formData))}`;
+        });
+
+            document.getElementById('bankAccountForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect all form data
+        const formData = {
+            bankName: document.getElementById('bankName').value,
+            accountType: document.querySelector('input[name="accountType"]:checked').value,
+            accountNumber: document.getElementById('accountNumber').value,
+            ifsc: document.getElementById('ifsc').value,
+            mobileNumber: document.getElementById('mobileNumber').value,
+            fullName: document.getElementById('fullName').value,
+            bankUpi: document.getElementById('bankUpi').value,
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value,
+            fundType: document.querySelector('input[name="fundType"]:checked').value,
+            autoTransfer: document.getElementById('autoTransfer').checked,
+            instantWithdrawal: document.getElementById('instantWithdrawal').checked,
+            // File names (in a real app, you'd upload these to a server)
+            atmCard: document.getElementById('atmCard').files[0]?.name || '',
+            panCard: document.getElementById('panCard').files[0]?.name || '',
+            aadhaarCard: document.getElementById('aadhaarCard').files[0]?.name || '',
+            qrCode: document.getElementById('qrCode').files[0]?.name || '',
+            timestamp: new Date().toISOString()
+        };
+
+        // Save to localStorage (for demo purposes)
+        let accounts = JSON.parse(localStorage.getItem('bankAccounts') || '[]');
+        accounts.push(formData);
+        localStorage.setItem('bankAccounts', JSON.stringify(accounts));
+        
+        // Redirect to database page
+        window.location.href = 'database.html';
+    });
+
+    // Check if we're editing an existing account
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editIndex = urlParams.get('edit');
+    
+    if (editIndex !== null) {
+        const accounts = JSON.parse(localStorage.getItem('bankAccounts') || []);
+        const account = accounts[editIndex];
+        
+        if (account) {
+            // Fill the form with existing data
+            document.getElementById('bankName').value = account.bankName;
+            document.querySelector(`input[name="accountType"][value="${account.accountType}"]`).checked = true;
+            document.getElementById('accountNumber').value = account.accountNumber;
+            document.getElementById('ifsc').value = account.ifsc;
+            document.getElementById('mobileNumber').value = account.mobileNumber;
+            document.getElementById('fullName').value = account.fullName;
+            document.getElementById('bankUpi').value = account.bankUpi;
+            document.getElementById('username').value = account.username;
+            document.getElementById('password').value = account.password;
+            document.querySelector(`input[name="fundType"][value="${account.fundType}"]`).checked = true;
+            document.getElementById('autoTransfer').checked = account.autoTransfer;
+            document.getElementById('instantWithdrawal').checked = account.instantWithdrawal;
+            
+            // Update the form title and button
+            document.getElementById('formTitle').textContent = currentLanguage === 'en' ? 'Edit Bank Account' : '编辑银行账户';
+            document.getElementById('submitBtn').textContent = currentLanguage === 'en' ? 'Update Account' : '更新账户';
+            
+            // Store the edit index in localStorage
+            localStorage.setItem('editAccountIndex', editIndex);
+        }
+    }
+});
+
+// Update form submission to handle edits
+document.getElementById('bankAccountForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Collect all form data
+    const formData = {
+        bankName: document.getElementById('bankName').value,
+        accountType: document.querySelector('input[name="accountType"]:checked').value,
+        accountNumber: document.getElementById('accountNumber').value,
+        ifsc: document.getElementById('ifsc').value,
+        mobileNumber: document.getElementById('mobileNumber').value,
+        fullName: document.getElementById('fullName').value,
+        bankUpi: document.getElementById('bankUpi').value,
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        fundType: document.querySelector('input[name="fundType"]:checked').value,
+        autoTransfer: document.getElementById('autoTransfer').checked,
+        instantWithdrawal: document.getElementById('instantWithdrawal').checked,
+        atmCard: document.getElementById('atmCard').files[0]?.name || '',
+        panCard: document.getElementById('panCard').files[0]?.name || '',
+        aadhaarCard: document.getElementById('aadhaarCard').files[0]?.name || '',
+        qrCode: document.getElementById('qrCode').files[0]?.name || '',
+        timestamp: new Date().toISOString()
+    };
+
+    let accounts = JSON.parse(localStorage.getItem('bankAccounts') || []);
+    const editIndex = localStorage.getItem('editAccountIndex');
+    
+    if (editIndex !== null) {
+        // Update existing account
+        accounts[editIndex] = formData;
+        localStorage.removeItem('editAccountIndex');
+    } else {
+        // Add new account
+        accounts.push(formData);
+    }
+    
+    localStorage.setItem('bankAccounts', JSON.stringify(accounts));
+    
+    // Redirect to database page
+    window.location.href = 'database.html';
+});
+    </script>
+</body>
+</html>
